@@ -24,6 +24,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://pharmacy-management-system-sandy.vercel.app',
   process.env.FRONTEND_URL,
+  process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null,
 ].filter(Boolean);
 
 async function startServer() {
