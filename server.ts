@@ -16,14 +16,33 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey_change_me';
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// Allowed origins: Vercel frontend + local dev
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://pharmacy-management-system-sandy.vercel.app',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
 
 async function startServer() {
   const app = express();
 
-  app.use(cors());
+  app.use(cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('CORS not allowed'));
+    },
+    credentials: true,
+  }));
   app.use(morgan('dev'));
   app.use(express.json());
+
 
   // Auth Middleware
   const authenticateToken = (req: any, res: any, next: any) => {

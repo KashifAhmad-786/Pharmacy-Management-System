@@ -1,8 +1,14 @@
 
 import axios from 'axios';
 
+// Production mein VITE_API_URL use hoga (Railway URL)
+// Development mein /api use hoga (local Express server)
+const BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
+
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: BASE_URL
 });
 
 api.interceptors.request.use((config) => {
